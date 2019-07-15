@@ -1,0 +1,35 @@
+version: '2'
+
+services:
+  mariadb:
+    container_name: mariadb
+    image: mariadb
+    restart: always
+    volumes:
+      - mariadb:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+
+  postgres:
+    container_name: postgres
+    image: postgres
+    restart: always
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+  db-clients:
+    container_name: db-clients
+    build: .
+    restart: always
+    links:
+      - mariadb
+      - postgres:postgresql
+    stdin_open: true
+    tty: true
+    command: /bin/sh
+
+volumes:
+  mariadb:
+    driver: local
+  postgres:
+    driver: local
